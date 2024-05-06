@@ -3,12 +3,13 @@ from databases import Mongo
 import re
 from hashlib import sha256
 import encryption
+from flask_wtf import CSRFProtect
 
 app = Flask(__name__)
 
 # Config
 app.config['SECRET_KEY'] = 'mysecretkey'
-
+csrf = CSRFProtect(app)
 
 # Database
 MONGO_URI = "mongodb://localhost:27017"
@@ -160,6 +161,23 @@ def tedit():
         flash('Password updated successfully', 'success')
     return render_template('edit.html', data=data)
 
+@app.route('/edit/<string:doc_id>', methods=['POST'])
+def update(doc_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        id = doc_id
+        password = request.form['password']
+        email = request.form['email']
+        website = request.form['website']
+        user_data = client.get_user(session['user_id'])
+        data = client.get_by_id(id)
+        data['password'] = encryption.encode_data(password, user_data['public_key'])
+        data['email'] = email
+        data['website'] = website
+        client.update_by_id(id, data)
+        flash('Password updated successfully', 'success')
+        return redirect('/')
 # Decrypt
 @app.route('/decrypt/<string:doc_id>', methods=['GET', 'POST'])
 def decrypt(doc_id):
