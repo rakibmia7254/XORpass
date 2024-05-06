@@ -18,7 +18,6 @@ def xor_decrypt(data, key):
 def encode_key(key, private_key=None):
 
     if private_key:
-        private_key = rsa.PrivateKey.load_pkcs1(private_key)
         return private_key.save_pkcs1().decode('utf-8'), b64encode(xor_encrypt(private_key.save_pkcs1(), key.encode('utf-8'))).decode('utf-8')
     else:
         public_key, private_key = rsa.newkeys(512)
