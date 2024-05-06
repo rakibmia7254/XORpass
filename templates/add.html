@@ -127,6 +127,7 @@
                     {%endif%}
                     {%endwith%}
                     <form class="space-y-4 md:space-y-6" action="/add" method="POST">
+                        <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
                         <div>
                             <label for="website" class="block mb-2 text-sm font-medium text-white">Website</label>
                             <input type="website" name="website" id="website"
