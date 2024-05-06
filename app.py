@@ -215,7 +215,7 @@ def settings():
 
         user_data = client.get_user(session['user_id'])
 
-        if user_data['password'] != password:
+        if sha256(password.encode()).hexdigest() != user_data['password']:
             flash('Invalid password', 'danger')
             return redirect('/settings')
         
