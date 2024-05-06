@@ -150,13 +150,13 @@ def tedit():
     if request.method == 'POST':
         id = request.form['id']
         password = request.form['password']
-        data = client.get_by_id(id)
-        decoded_key = encryption.decode_key(user_data['private_key'], password)
-        data['password'] = encryption.decode_data(data['password'], decoded_key)
         user_data = client.get_user(session['user_id'])
         if sha256(password.encode()).hexdigest() != user_data['password']:
             flash('Invalid password', 'danger')
             return redirect(f'/decrypt/{id}')
+        data = client.get_by_id(id)
+        decoded_key = encryption.decode_key(user_data['private_key'], password)
+        data['password'] = encryption.decode_data(data['password'], decoded_key)
         flash('Password updated successfully', 'success')
     return render_template('edit.html', data=data)
 
