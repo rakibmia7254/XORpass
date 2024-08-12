@@ -248,7 +248,7 @@ def settings():
             return redirect('/settings')
         else:
             private_key = encryption.decode_key(user_data['private_key'], password)
-            user_data['private_key'] = encryption.encode_key(password,private_key=private_key)[1]
+            user_data['private_key'] = encryption.encode_key(new_password,private_key=private_key)[1]
             user_data['password'] = sha256(new_password.encode()).hexdigest() # Hashing the new_password
             client.update_user(session['user_id'], user_data)
             flash('Password updated successfully', 'success')
